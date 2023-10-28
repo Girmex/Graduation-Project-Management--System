@@ -1,5 +1,5 @@
 # Graduation-Project-Management--System
-This is my final year project.
+This is my final year project. I have developed it with Vue.js, Tailwind CSS, Express.js and MySQL database. It is my milestone in my web development progress.
 
 #The Graduation Project Management System is a comprehensive platform designed to facilitate the organization and
 management of graduation projects undertaken by universities. It aims to streamline the entire process, from project proposal submission to final 
