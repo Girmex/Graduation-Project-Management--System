@@ -1,0 +1,95 @@
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let destinationFolder = 'public/files';
+
+    // Determine the destination folder based on an additional identifier (e.g., file name or field name)
+    if (file.fieldname === 'file1') {
+      destinationFolder = 'public/Senay';
+    } else if (file.fieldname === 'file2') {
+      destinationFolder = 'public/Solomon';
+    } 
+
+    cb(null, destinationFolder); // Set the destination folder dynamically
+  },
+  filename: (req, file, cb) => {
+    const originalName = file.originalname;
+    cb(null, originalName); // Use the original file name as the saved filename
+  }
+});
+
+
+
+  router.post('/repo', upload.fields([
+  { name: 'file1', maxCount: 1 },
+  { name: 'file2', maxCount: 1 }
+]), async (req, res) => {
+      const title = req.body.title;   
+      const advisor= req.body.advisor;
+      const students=req.body.students;
+      const description=req.body.description;
+  
+      const file1 = req.files['file1'][0];
+     const file2 = req.files['file2'][0];
+     const file1Name = file1.originalname;
+     const file2Name = file2.originalname;
+
+console.log(file1Name)
+    
+        var url = "http://localhost:5000/files/" + file1Name;
+        var url2 = "http://localhost:5000/files/" + file2Name;
+        var sql = 'INSERT INTO repo (name, description, advisor, students, url,url2) VALUES (?, ?, ?, ?,?,?)';
+        db.query(sql, [title, description, advisor,students,url,url2], (err, result) => {
+          if (err){
+            res.send(err)
+            console.log(err)
+           }
+          console.log(result);
+        });
+      
+   
+    
+  });
+
+
+
+
+
+
+  router.post('/lastnotice/:user',(req,res)=>{
+const query = `UPDATE notification_user set lastId = ${req.body.lastNoticeId} where username='${req.params.user}'`;
+db.query(query, (err, result) => {
+if (err) {
+  console.log('Error executing query:');
+} 
+  console.log('updated successfully.');
+
+})
+})
+
+router.get('/notices/:user', (req, res) => {
+  const query = `SELECT lastId FROM notification_user where username='${req.params.user}'`;
+  db.query(query, (error, results) => {
+    if (error) {
+      console.log('Error executing query:', error);
+    } else {
+      const lastNoticeId = Object.assign({}, results[0]).lastId;
+           console.log(lastNoticeId,'bro')
+        const noticesQuery = `SELECT * FROM notices WHERE  id > ${lastNoticeId}`;
+        db.query(noticesQuery, (err, noticesResult) => {
+          if (err) {
+            console.error('Error fetching notices:');
+           res.send({
+            msg:false
+           })
+          } else {
+            res.send(noticesResult);
+          }
+        });
+ 
+
+      
+    }
+});
+
+})

@@ -1,0 +1,9 @@
+# Ignore build artifacts
+build/
+dist/
+
+# Ignore dependencies
+node_modules/
+
+# Ignore public folder
+public/
